@@ -3,13 +3,15 @@
 
 __author__ = 'Bruno Konrad'
 
+from pymongo import MongoClient
 import tweepy
 import os
 
 
 app_config = {
     'consumer_key': '3OOvr9oYkz0RRA8AM9jNPZRZH',
-    'consumer_secret': '9Q0VV34WXFU7NxCDfsW8xJGkSizk1RIo71XrRtDxM5zPomlB7t'
+    'consumer_secret': '9Q0VV34WXFU7NxCDfsW8xJGkSizk1RIo71XrRtDxM5zPomlB7t',
+    'host': 'localhost', 'port': 27017
 }
 
 
@@ -20,18 +22,42 @@ class Toupeira(object):
     """
     def __init__(self):
         self._twitter_minner = TwitterMiner(app_config['consumer_key'], app_config['consumer_secret'])
+        self._db_saver = DatabaseSaver()
 
-        trampo_search = self._twitter_minner.api.search('trabalho :)')
-        for result in trampo_search:
-            print("%s \n" % result.text)
+        #trampo_search = self._twitter_minner.api.search('trabalho :)')
+        #for result in trampo_search:
+        #    self._db_saver.insert_tweets(result)
+        #print ('Tweets salvos...')
+
+        tweets_salvos = self._db_saver.get_all_tweets()
+        for t in tweets_salvos:
+            print t['text']
 
 
 class DatabaseSaver(object):
     """
     Vai servir para salvar os dados colhidos na base em MongoDB.
     """
+    def __init__(self):
+        self._mongo_client = MongoClient(app_config['host'], app_config['port'])
 
-    pass
+        # pega a base de dados oliver_test
+        self._db_oliver = self._mongo_client['oliver_test']
+        # pega a coleção onde serão inseridos os documentos
+        self._sentences = self._db_oliver['sentences']
+
+    def get_all_tweets(self):
+        return self._sentences.find({'origin': 'twitter'})
+
+    def _insert_base(self, text, origin):
+        document = {
+            'text': text,
+            'origin': origin
+        }
+        return self._sentences.insert(document)
+
+    def insert_tweets(self, search_result):
+        return self._insert_base(search_result.text, 'twitter')
 
 
 class TwitterMiner(object):
