@@ -15,7 +15,7 @@ app_config = {
 }
 
 
-class Toupeira(object):
+class Mole(object):
     """
     O Toupeira! Vai ser a cola do TwitterMiner e do DatabaseSaver! Vai buscar os tweets e salvar. Isso mermo.
     Acho que dá pra fazer várias Threads rodando nisso e ir salvando assim mesmo. Pode crer e pode pá.
@@ -29,9 +29,16 @@ class Toupeira(object):
         #    self._db_saver.insert_tweets(result)
         #print ('Tweets salvos...')
 
-        tweets_salvos = self._db_saver.get_all_tweets()
-        for t in tweets_salvos:
-            print t['text']
+    def get_saved_tweets(self):
+        return self._db_saver.get_all_tweets()
+
+    def search_positive_tweets(self):
+        tweets = self._twitter_minner.search(':)', limit=100)
+        for t in tweets:
+            print(t.text)
+
+    def _save_tweets(self, tweet):
+        self._db_saver.insert_tweets(tweet)
 
 
 class DatabaseSaver(object):
@@ -94,6 +101,9 @@ class TwitterMiner(object):
                 os.remove(TwitterMiner._CREDENTIAL_FILE)
                 raise Exception('Alguma coisa deu errado na hora de criar isso')
 
+    def search(self, q, lang="pt", limit=15):
+        return tweepy.Cursor(self.api.search, q=q, lang=lang).items(limit)
+
     @property
     def _is_authorized(self):
         """
@@ -128,4 +138,5 @@ class TwitterMiner(object):
 
 
 if __name__ == '__main__':
-    toupeira = Toupeira()
+    toupeira = Mole()
+    toupeira.search_positive_tweets()
