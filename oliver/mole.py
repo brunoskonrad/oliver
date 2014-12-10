@@ -5,7 +5,7 @@ __author__ = 'Bruno Konrad'
 
 from oliver import app_config
 from oliver.twitter_miner import TwitterMiner
-from oliver.data_saver import MongoSaver
+from oliver.data_sentence import MongoSentence
 
 
 class Mole(object):
@@ -15,7 +15,7 @@ class Mole(object):
     """
     def __init__(self):
         self._twitter_minner = TwitterMiner(app_config['consumer_key'], app_config['consumer_secret'])
-        self._sentence = MongoSaver()
+        self._sentence = MongoSentence()
 
         #trampo_search = self._twitter_minner.api.search('trabalho :)')
         #for result in trampo_search:

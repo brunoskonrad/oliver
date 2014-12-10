@@ -3,10 +3,10 @@
 
 __author__ = 'Bruno Konrad'
 
-from oliver.data_saver import MongoSaver
+from oliver.data_sentence import MongoSentence
 
 
 class SentimentAnalysis(object):
 
     def __init__(self):
-        pass
+        self._sentence = MongoSentence()

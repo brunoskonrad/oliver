@@ -7,9 +7,9 @@ from pymongo import MongoClient
 from oliver import app_config
 
 
-class MongoSaver(object):
+class MongoSentence(object):
     """
-    Representa um
+    É a classe que irá trabalhar com a inserção de dados em uma base de dados MongoDB
     """
     def __init__(self):
         self._mongo_client = MongoClient(app_config['host'], app_config['port'])

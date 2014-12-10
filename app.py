@@ -3,9 +3,6 @@
 
 __author__ = 'Bruno Konrad'
 
-from oliver.mole import Mole
-
 
 if __name__ == '__main__':
-    toupeira = Mole()
-    toupeira.search_positive_tweets()
+    print ('Escrevendo a aplicação, ainda.')
